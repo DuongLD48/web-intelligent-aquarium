@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings — Aquarium</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+
+        <!-- ── HEADER ──────────────────────────────────────────────── -->
+        <header class="app-header">
+            <span class="header-brand">🐟 Aquarium</span>
+            <div class="header-status">
+                <span class="status-dot offline" id="dot-online"></span>
+                <span id="txt-online">Offline</span>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html">Dashboard</a>
+                <a href="user-settings.html" class="active">Settings</a>
+                <a href="admin.html">Admin</a>
+            </nav>
+        </header>
+
+        <div class="offline-banner" id="banner-offline">
+            ⚡ Mất kết nối Firebase — đang thử lại...
+        </div>
+
+        <!-- ── BODY ─────────────────────────────────────────────────── -->
+        <main>
+            <div class="settings-wrapper">
+
+                <!-- SECTION 1 — NHIỆT ĐỘ -->
+                <div class="settings-card">
+                    <div class="settings-card-title temp">🌡 Nhiệt độ</div>
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">Min (°C)</label>
+                            <input class="form-input" type="number" id="inp-temp-min" min="15" max="35" step="0.1">
+                            <span class="form-error" id="err-temp">
+                            Min phải nhỏ hơn Max tối thiểu 0.5°C
+                        </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Max (°C)</label>
+                            <input class="form-input" type="number" id="inp-temp-max" min="15.5" max="38" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-preview mt-sm" id="prev-temp">→ --</div>
+                </div>
+
+                <!-- SECTION 2 — pH -->
+                <div class="settings-card">
+                    <div class="settings-card-title ph">⚗ Độ pH</div>
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">pH Min</label>
+                            <input class="form-input" type="number" id="inp-ph-min" min="5.0" max="9.0" step="0.1">
+                            <span class="form-error" id="err-ph">
+                            Min phải nhỏ hơn Max tối thiểu 0.3
+                        </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">pH Max</label>
+                            <input class="form-input" type="number" id="inp-ph-max" min="5.3" max="9.5" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-preview mt-sm" id="prev-ph">→ --</div>
+                </div>
+
+                <!-- SECTION 3 — TDS -->
+                <div class="settings-card">
+                    <div class="settings-card-title tds">💎 TDS</div>
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">Mục tiêu (ppm)</label>
+                            <input class="form-input" type="number" id="inp-tds-target" min="50" max="2000" step="10">
+                            <span class="form-error" id="err-tds">
+                            Giá trị không hợp lệ
+                        </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Dung sai (ppm)</label>
+                            <input class="form-input" type="number" id="inp-tds-tol" min="10" max="500" step="10">
+                        </div>
+                    </div>
+                    <div class="form-preview mt-sm" id="prev-tds">→ --</div>
+                </div>
+
+                <!-- SECTION 4 — THAY NƯỚC -->
+                <div class="settings-card">
+                    <div class="settings-card-title wc">💧 Thay nước tự động</div>
+
+                    <!-- Toggle bật/tắt lịch -->
+                    <div class="flex gap-sm" style="align-items:center; margin-bottom:14px">
+                        <label class="toggle clickable" id="toggle-schedule" onclick="toggleSchedule()">
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb"></div>
+                    </label>
+                        <span class="text-sm" id="lbl-schedule">Lịch tự động: Tắt</span>
+                    </div>
+
+                    <!-- Schedule inputs (ẩn khi tắt) -->
+                    <div id="schedule-inputs" style="opacity:0.3; pointer-events:none;
+                     transition:opacity 0.2s">
+                        <div class="input-row" style="margin-bottom:10px">
+                            <div class="form-group">
+                                <label class="form-label">Giờ</label>
+                                <select class="form-select" id="inp-hour">
+                                <!-- 0–23 được điền bằng JS -->
+                            </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phút</label>
+                                <select class="form-select" id="inp-minute">
+                                <!-- 0–59 được điền bằng JS -->
+                            </select>
+                            </div>
+                        </div>
+                        <div class="form-preview" id="prev-schedule">→ --</div>
+                    </div>
+
+                    <!-- Pump timing (luôn hiển thị) -->
+                    <div style="margin-top:14px">
+                        <div class="input-row">
+                            <div class="form-group">
+                                <label class="form-label">Bơm ra (giây)</label>
+                                <input class="form-input" type="number" id="inp-pump-out" min="10" max="3600" step="5">
+                                <span class="form-hint" id="prev-pump-out"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bơm vào (giây)</label>
+                                <input class="form-input" type="number" id="inp-pump-in" min="10" max="3600" step="5">
+                                <span class="form-hint" id="prev-pump-in"></span>
+                            </div>
+                        </div>
+                        <span class="form-error" id="err-pump">
+                        Thời gian tối thiểu 10 giây
+                    </span>
+                    </div>
+
+                    <!-- Nút thay nước ngay -->
+                    <div style="margin-top:16px">
+                        <button class="btn btn-primary btn-full" id="btn-water-now" onclick="triggerWaterChange()">
+                        💧 Thay nước ngay
+                    </button>
+                        <div class="text-xs text-sub mt-sm" id="wc-last-run">
+                            Lần cuối: --
+                        </div>
+                        <div class="text-xs" id="wc-state-info" style="margin-top:4px"></div>
+                    </div>
+                </div>
+
+                <!-- SECTION 5 — PID pH (collapsible) -->
+                <div class="settings-card">
+                    <div class="collapsible-trigger" id="pid-trigger" onclick="togglePid()">
+                        <span class="collapsible-arrow" id="pid-arrow">▶</span>
+                        <span class="text-sm">Cài đặt nâng cao PID pH</span>
+                    </div>
+                    <div class="collapsible-body" id="pid-body">
+                        <div class="input-row-3" style="margin-top:12px">
+                            <div class="form-group">
+                                <label class="form-label">Kp</label>
+                                <input class="form-input" type="number" id="inp-kp" min="0" max="1000" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ki</label>
+                                <input class="form-input" type="number" id="inp-ki" min="0" max="500" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Kd</label>
+                                <input class="form-input" type="number" id="inp-kd" min="0" max="500" step="1">
+                            </div>
+                        </div>
+                        <div class="form-hint mt-sm">
+                            Thay đổi PID ảnh hưởng trực tiếp đến bơm pH. Cẩn thận.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /settings-wrapper -->
+        </main>
+
+        <!-- ── STICKY FOOTER ────────────────────────────────────────── -->
+        <div class="settings-footer">
+            <span class="dirty-indicator hidden" id="dirty-indicator">
+            ● <span id="dirty-count">0</span> thay đổi chưa lưu
+            </span>
+            <button class="btn btn-ghost btn-sm" onclick="revertChanges()">Hủy</button>
+            <button class="btn btn-primary btn-sm" id="btn-save" onclick="saveAll()" disabled>Lưu</button>
+            <button class="btn btn-danger btn-sm" style="margin-left:auto" onclick="resetToDefault()">↺ Mặc định</button>
+        </div>
+
+        <!-- ── TOAST CONTAINER ──────────────────────────────────────── -->
+        <div class="toast-container" id="toast-container"></div>
+
+    </div>
+    <!-- /page-wrapper -->
+
+    <script type="module" src="js/user-settings.js"></script>
+</body>
+
+</html>

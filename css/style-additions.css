@@ -1,0 +1,487 @@
+/* ================================================================
+   style-additions.css — Intelligent Aquarium v7.0
+   ================================================================ */
+
+
+/* ================================================================
+   LIGHT THEME — ghi đè toàn bộ CSS variables
+   ================================================================ */
+
+:root {
+    /* Backgrounds */
+    --bg-page:      #f0f4f8;
+    --bg-card:      #ffffff;
+    --bg-card2:     #f7f9fc;
+
+    /* Borders */
+    --border:       rgba(0, 0, 0, 0.09);
+    --border-light: rgba(0, 0, 0, 0.06);
+
+    /* Text */
+    --text-main:    #0f172a;
+    --text-sub:     #475569;
+    --text-dim:     #94a3b8;
+
+    /* Accents — giữ màu gốc, chỉ tăng độ bão hòa nhẹ để nổi trên nền trắng */
+    --accent-temp:     #d97706;
+    --accent-ph:       #0d9488;
+    --accent-tds:      #7c3aed;
+    --accent-ok:       #16a34a;
+    --accent-warn:     #d97706;
+    --accent-err:      #dc2626;
+    --accent-pipeline: #2563eb;
+    --accent-safety:   #dc2626;
+}
+
+/* Body / page background */
+body {
+    background: var(--bg-page) !important;
+    color: var(--text-main) !important;
+}
+
+/* ── Header ───────────────────────────────────────────────────── */
+.app-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--border) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+}
+
+.header-brand,
+.header-nav a,
+.header-uptime {
+    color: var(--text-main) !important;
+}
+
+.header-nav a.active,
+.header-nav a:hover {
+    color: var(--accent-pipeline) !important;
+    border-bottom-color: var(--accent-pipeline) !important;
+}
+
+/* ── Cards ────────────────────────────────────────────────────── */
+.card {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important;
+}
+
+.card-title,
+.section-title,
+.form-label {
+    color: var(--text-main) !important;
+}
+
+/* ── Gauge SVG text ───────────────────────────────────────────── */
+.gauge-value,
+.gauge-unit {
+    fill: var(--text-main) !important;
+}
+
+.gauge-track {
+    stroke: rgba(0,0,0,0.07) !important;
+}
+
+.gauge-range span {
+    color: var(--text-dim) !important;
+}
+
+/* ── Form inputs ──────────────────────────────────────────────── */
+.form-input,
+.form-select,
+.form-textarea {
+    background: #f8fafc !important;
+    border: 1px solid rgba(0,0,0,0.12) !important;
+    color: var(--text-main) !important;
+}
+
+.form-input:focus,
+.form-select:focus {
+    border-color: var(--accent-pipeline) !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.btn-primary {
+    background: var(--accent-pipeline) !important;
+    color: #fff !important;
+}
+
+.btn-secondary,
+.btn-outline {
+    background: #fff !important;
+    border-color: rgba(0,0,0,0.15) !important;
+    color: var(--text-main) !important;
+}
+
+.btn-danger {
+    background: var(--accent-err) !important;
+    color: #fff !important;
+}
+
+/* ── Relay items ──────────────────────────────────────────────── */
+.relay-item {
+    background: #f8fafc !important;
+    border: 1px solid var(--border) !important;
+}
+
+.relay-name {
+    color: var(--text-sub) !important;
+}
+
+.relay-item.on {
+    background: rgba(37,99,235,0.06) !important;
+    border-color: rgba(37,99,235,0.2) !important;
+}
+
+/* ── Toggle ───────────────────────────────────────────────────── */
+.toggle-track {
+    background: rgba(0,0,0,0.12) !important;
+}
+
+.toggle.on .toggle-track {
+    background: var(--accent-pipeline) !important;
+}
+
+.toggle-thumb {
+    background: #fff !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
+}
+
+/* ── Banners ──────────────────────────────────────────────────── */
+.offline-banner {
+    background: rgba(220,38,38,0.06) !important;
+    border-color: rgba(220,38,38,0.2) !important;
+    color: var(--accent-err) !important;
+}
+
+.safe-mode-banner {
+    background: rgba(217,119,6,0.06) !important;
+    border-color: rgba(217,119,6,0.25) !important;
+    color: var(--accent-warn) !important;
+}
+
+/* ── Source badges ────────────────────────────────────────────── */
+.source-badge.measured {
+    background: rgba(22,163,74,0.10) !important;
+    color: var(--accent-ok) !important;
+    border: 1px solid rgba(22,163,74,0.25) !important;
+}
+
+.source-badge.fallback {
+    background: rgba(217,119,6,0.10) !important;
+    color: var(--accent-warn) !important;
+    border: 1px solid rgba(217,119,6,0.25) !important;
+}
+
+/* ── Analytics / WSI / FSI gauges ────────────────────────────── */
+.analytics-section,
+.wsi-card,
+.fsi-card {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+}
+
+/* ── Safety log table ─────────────────────────────────────────── */
+.safety-log-table th {
+    color: var(--text-dim) !important;
+    border-bottom-color: var(--border) !important;
+}
+
+.safety-log-table td {
+    color: var(--text-sub) !important;
+    border-bottom-color: var(--border) !important;
+}
+
+.event-name {
+    color: var(--text-main) !important;
+}
+
+/* ── Toast notifications ──────────────────────────────────────── */
+.toast {
+    background: #fff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-main) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.10) !important;
+}
+
+/* ── Chart cards ──────────────────────────────────────────────── */
+.chart-card {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important;
+}
+
+.chart-section-header {
+    border-bottom-color: var(--border) !important;
+}
+
+.chart-section-title {
+    color: var(--text-main) !important;
+}
+
+.chart-last-update {
+    color: var(--text-dim) !important;
+}
+
+.chart-card-unit.temp {
+    background: rgba(217,119,6,0.10) !important;
+    color: var(--accent-temp) !important;
+    border-color: rgba(217,119,6,0.22) !important;
+}
+
+.chart-card-unit.ph {
+    background: rgba(13,148,136,0.10) !important;
+    color: var(--accent-ph) !important;
+    border-color: rgba(13,148,136,0.22) !important;
+}
+
+.chart-card-unit.tds {
+    background: rgba(124,58,237,0.10) !important;
+    color: var(--accent-tds) !important;
+    border-color: rgba(124,58,237,0.22) !important;
+}
+
+.chart-card.loading .chart-canvas-wrap::after,
+.chart-card.no-data .chart-canvas-wrap::after {
+    background: #ffffff !important;
+    color: var(--text-dim) !important;
+}
+
+/* ── Water change section ─────────────────────────────────────── */
+.wc-progress-track {
+    background: rgba(0,0,0,0.08) !important;
+}
+
+.wc-progress-fill {
+    background: var(--accent-pipeline) !important;
+}
+
+.wc-state-badge.idle     { background: rgba(0,0,0,0.06) !important; color: var(--text-dim) !important; }
+.wc-state-badge.pumping-out { background: rgba(220,38,38,0.08) !important; color: var(--accent-err) !important; }
+.wc-state-badge.pumping-in  { background: rgba(37,99,235,0.08) !important; color: var(--accent-pipeline) !important; }
+
+/* ── Scrollbar (light) ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f0f4f8; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+
+/* ================================================================
+   TOOLTIP
+   ================================================================ */
+
+.tooltip-icon {
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    cursor: help;
+    user-select: none;
+    transition: color 0.15s;
+    vertical-align: middle;
+}
+
+.tooltip-icon:hover {
+    color: var(--accent-ph);
+}
+
+.field-tooltip {
+    position: absolute;
+    z-index: 500;
+    background: var(--bg-card2);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 0.74rem;
+    color: var(--text-main);
+    line-height: 1.55;
+    max-width: 260px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.field-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* ================================================================
+   FIELD STATES
+   ================================================================ */
+
+.form-input.field-changed,
+.form-select.field-changed {
+    border-color: rgba(217, 119, 6, 0.5) !important;
+    background: rgba(217, 119, 6, 0.04) !important;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.form-input.field-alert,
+.form-select.field-alert {
+    border-color: var(--accent-warn) !important;
+    background: rgba(217, 119, 6, 0.05) !important;
+    animation: pulse-warn 2s ease-in-out infinite;
+}
+
+.form-input.field-danger,
+.form-select.field-danger {
+    border-color: var(--accent-err) !important;
+    background: rgba(220, 38, 38, 0.05) !important;
+    animation: pulse-danger 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-warn {
+    0%, 100% { box-shadow: 0 0 0 0   rgba(217, 119, 6, 0.0); }
+    50%       { box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.22); }
+}
+
+@keyframes pulse-danger {
+    0%, 100% { box-shadow: 0 0 0 0   rgba(220, 38, 38, 0.0); }
+    50%       { box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.22); }
+}
+
+
+/* ================================================================
+   SAFETY ALERT BANNER
+   ================================================================ */
+
+.safety-alert-banner {
+    display: none;
+    background: rgba(217, 119, 6, 0.05);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 0.74rem;
+    color: var(--accent-warn);
+    line-height: 1.8;
+}
+
+.safety-alert-banner.visible {
+    display: block;
+}
+
+.safety-alert-banner .alert-danger {
+    color: var(--accent-err);
+    font-weight: 500;
+}
+
+
+/* ================================================================
+   TOAST — type warning
+   ================================================================ */
+
+.toast.warning {
+    border-color: rgba(217, 119, 6, 0.25);
+    color: var(--accent-warn);
+}
+
+
+/* ================================================================
+   CHART SECTION — Lịch sử 12 giờ
+   ================================================================ */
+
+.chart-section {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 var(--gap) var(--gap);
+}
+
+.chart-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.chart-section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: 0.02em;
+}
+
+.chart-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chart-last-update {
+    font-size: 0.72rem;
+    color: var(--text-sub);
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+}
+
+@media (max-width: 900px) {
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-card {
+    background:    var(--bg-card);
+    border:        1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding:       16px 16px 12px;
+}
+
+.chart-card-header {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    margin-bottom:   10px;
+}
+
+.chart-card-title {
+    font-size:   0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.chart-card-title.temp { color: var(--accent-temp); }
+.chart-card-title.ph   { color: var(--accent-ph);   }
+.chart-card-title.tds  { color: var(--accent-tds);  }
+
+.chart-card-unit {
+    font-size:   0.68rem;
+    font-family: 'IBM Plex Mono', monospace;
+    padding:     2px 7px;
+    border-radius: var(--radius-xs);
+    font-weight: 600;
+}
+
+.chart-canvas-wrap {
+    position: relative;
+    height: 180px;
+}
+
+.chart-canvas-wrap canvas {
+    display: block;
+    width:  100% !important;
+    height: 100% !important;
+}
+
+.chart-card.loading .chart-canvas-wrap::after,
+.chart-card.no-data .chart-canvas-wrap::after {
+    content:      attr(data-msg);
+    position:     absolute;
+    inset:        0;
+    display:      flex;
+    align-items:  center;
+    justify-content: center;
+    font-size:    0.75rem;
+    color:        var(--text-dim);
+    background:   var(--bg-card);
+}

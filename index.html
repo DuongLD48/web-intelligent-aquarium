@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquarium Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-additions.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+
+        <!-- ── HEADER ──────────────────────────────────────────────── -->
+        <header class="app-header">
+            <span class="header-brand">🐟 Aquarium</span>
+
+            <div class="header-status">
+                <span class="status-dot offline" id="dot-online"></span>
+                <span id="txt-online">Offline</span>
+            </div>
+
+            <span class="header-uptime mono" id="txt-uptime">↑ --</span>
+
+            <nav class="header-nav">
+                <a href="index.html" class="active">Dashboard</a>
+                <a href="user-settings.html">Settings</a>
+                <a href="admin.html">Admin</a>
+            </nav>
+        </header>
+
+        <!-- Safe mode banner -->
+        <div class="safe-mode-banner" id="banner-safe-mode">
+            ⚠ SAFE MODE — Hệ thống đang ở chế độ an toàn
+        </div>
+
+        <!-- Offline banner -->
+        <div class="offline-banner" id="banner-offline">
+            ⚡ Mất kết nối Firebase — đang thử lại...
+        </div>
+
+        <!-- Firmware stale banner -->
+        <div class="offline-banner" id="banner-stale" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.3);color:var(--accent-warn)">
+            ⏱ Firmware không phản hồi — không nhận được dữ liệu trong 30 giây
+        </div>
+
+        <!-- ── MAIN ─────────────────────────────────────────────────── -->
+        <main class="main-content">
+            <div class="dashboard-grid">
+
+                <!-- ── ROW 1: SENSOR CARDS ──────────────────────────── -->
+                <div class="sensor-row" style="grid-column:1/-1">
+                    <div class="sensor-grid">
+
+                        <!-- Card Nhiệt độ -->
+                        <div class="card" id="card-temp">
+                            <div class="sensor-header">
+                                <span class="card-title">Nhiệt độ</span>
+                                <div class="flex gap-sm" style="align-items:center">
+                                    <span class="status-dot ok" id="dot-temp"></span>
+                                    <span class="source-badge measured" id="badge-temp-src">MEAS</span>
+                                </div>
+                            </div>
+                            <div class="gauge-wrap">
+                                <svg class="gauge-svg" width="140" height="80" viewBox="0 0 140 80">
+                                <!-- nửa vòng tròn: cx=70 cy=75 r=60, 180°→0° -->
+                                <path class="gauge-track" id="track-temp"
+                                      d="M10,75 A60,60 0 0,1 130,75"
+                                      stroke-width="10"/>
+                                <path class="gauge-arc" id="arc-temp"
+                                      d="M10,75 A60,60 0 0,1 130,75"
+                                      stroke="#f59e0b" stroke-width="10"
+                                      stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+                                <text class="gauge-value" id="val-temp" x="70" y="68">--.-</text>
+                            </svg>
+                                <div class="gauge-range">
+                                    <span id="min-temp">15°C</span>
+                                    <span id="max-temp">40°C</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card pH -->
+                        <div class="card" id="card-ph">
+                            <div class="sensor-header">
+                                <span class="card-title">Độ pH</span>
+                                <div class="flex gap-sm" style="align-items:center">
+                                    <span class="status-dot ok" id="dot-ph"></span>
+                                    <span class="source-badge measured" id="badge-ph-src">MEAS</span>
+                                </div>
+                            </div>
+                            <div class="gauge-wrap">
+                                <svg class="gauge-svg" width="140" height="80" viewBox="0 0 140 80">
+                                <path class="gauge-track" id="track-ph"
+                                      d="M10,75 A60,60 0 0,1 130,75"
+                                      stroke-width="10"/>
+                                <path class="gauge-arc" id="arc-ph"
+                                      d="M10,75 A60,60 0 0,1 130,75"
+                                      stroke="#2dd4bf" stroke-width="10"
+                                      stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+                                <text class="gauge-value" id="val-ph" x="70" y="68">-.--</text>
+                            </svg>
+                                <div class="gauge-range">
+                                    <span id="min-ph">4</span>
+                                    <span id="max-ph">10</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card TDS -->
+                        <div class="card" id="card-tds">
+                            <div class="sensor-header">
+                                <span class="card-title">TDS</span>
+                                <div class="flex gap-sm" style="align-items:center">
+                                    <span class="status-dot ok" id="dot-tds"></span>
+                                    <span class="source-badge measured" id="badge-tds-src">MEAS</span>
+                                </div>
+                            </div>
+                            <div class="gauge-wrap">
+                                <svg class="gauge-svg" width="140" height="80" viewBox="0 0 140 80">
+                                <path class="gauge-track" id="track-tds"
+                                      d="M10,75 A60,60 0 0,1 130,75"
+                                      stroke-width="10"/>
+                                <path class="gauge-arc" id="arc-tds"
+                                      d="M10,75 A60,60 0 0,1 130,75"
+                                      stroke="#a78bfa" stroke-width="10"
+                                      stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+                                <text class="gauge-value" id="val-tds" x="70" y="68">---</text>
+                            </svg>
+                                <div class="gauge-range">
+                                    <span id="min-tds">0</span>
+                                    <span id="max-tds">1000 ppm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /sensor-grid -->
+                </div>
+                <!-- /sensor-row -->
+
+                <!-- ── COL LEFT ─────────────────────────────────────── -->
+                <div style="display:flex; flex-direction:column; gap:var(--gap)">
+
+                    <!-- RELAY -->
+                    <div class="card">
+                        <div class="card-title">Relay</div>
+                        <div class="relay-grid">
+                            <div class="relay-item" id="relay-heater">
+                                <span class="relay-icon">🔥</span>
+                                <span class="relay-name">Heater</span>
+                                <div class="toggle" id="toggle-heater">
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="relay-item" id="relay-cooler">
+                                <span class="relay-icon">❄️</span>
+                                <span class="relay-name">Cooler</span>
+                                <div class="toggle" id="toggle-cooler">
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="relay-item" id="relay-ph-up">
+                                <span class="relay-icon">⬆️</span>
+                                <span class="relay-name">pH Up</span>
+                                <div class="toggle" id="toggle-ph-up">
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="relay-item" id="relay-ph-down">
+                                <span class="relay-icon">⬇️</span>
+                                <span class="relay-name">pH Down</span>
+                                <div class="toggle" id="toggle-ph-down">
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="relay-item" id="relay-pump-in">
+                                <span class="relay-icon">💧</span>
+                                <span class="relay-name">Pump In</span>
+                                <div class="toggle" id="toggle-pump-in">
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="relay-item" id="relay-pump-out">
+                                <span class="relay-icon">🚰</span>
+                                <span class="relay-name">Pump Out</span>
+                                <div class="toggle" id="toggle-pump-out">
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WATER CHANGE -->
+                    <div class="card">
+                        <div class="card-title">Thay nước</div>
+                        <div class="wc-panel">
+                            <span class="wc-state-badge idle" id="wc-state-badge">IDLE</span>
+                            <span class="text-sm text-sub" id="wc-last-run">Lần cuối: --</span>
+                            <button class="btn btn-primary btn-sm ml-auto" id="btn-water-change" onclick="triggerWaterChange()">
+                            💧 Thay ngay
+                        </button>
+                        </div>
+
+                        <!-- Progress bar (ẩn khi IDLE) -->
+                        <div class="wc-progress-wrap mt-sm" id="wc-progress-wrap">
+                            <div class="wc-progress-bar">
+                                <div class="wc-progress-fill" id="wc-progress-fill"></div>
+                            </div>
+                            <span class="wc-progress-pct" id="wc-progress-pct">0%</span>
+                        </div>
+
+                        <div class="mt-sm text-xs text-sub" id="wc-schedule-info">
+                            Lịch: --
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /col-left -->
+
+                <!-- ── COL RIGHT ────────────────────────────────────── -->
+                <div style="display:flex; flex-direction:column; gap:var(--gap)">
+
+                    <!-- ANALYTICS -->
+                    <div class="card">
+                        <div class="card-title">Analytics</div>
+                        <div class="analytics-grid">
+                            <!-- WSI gauge -->
+                            <div class="analytics-gauge-wrap">
+                                <span class="analytics-gauge-label">WSI</span>
+                                <svg width="80" height="48" viewBox="0 0 80 48">
+                                <path class="gauge-track"
+                                      d="M6,44 A34,34 0 0,1 74,44"
+                                      stroke-width="7"/>
+                                <path class="gauge-arc" id="arc-wsi"
+                                      d="M6,44 A34,34 0 0,1 74,44"
+                                      stroke="#34d399" stroke-width="7"
+                                      stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+                                <text style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;fill:var(--text-main);text-anchor:middle;dominant-baseline:middle"
+                                      x="40" y="34" id="val-wsi">--</text>
+                            </svg>
+                                <span class="analytics-gauge-label" id="txt-wsi-status">--</span>
+                            </div>
+
+                            <!-- FSI gauge -->
+                            <div class="analytics-gauge-wrap">
+                                <span class="analytics-gauge-label">FSI</span>
+                                <svg width="80" height="48" viewBox="0 0 80 48">
+                                <path class="gauge-track"
+                                      d="M6,44 A34,34 0 0,1 74,44"
+                                      stroke-width="7"/>
+                                <path class="gauge-arc" id="arc-fsi"
+                                      d="M6,44 A34,34 0 0,1 74,44"
+                                      stroke="#34d399" stroke-width="7"
+                                      stroke-dasharray="106.8" stroke-dashoffset="106.8"/>
+                                <text style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;fill:var(--text-main);text-anchor:middle;dominant-baseline:middle"
+                                      x="40" y="34" id="val-fsi">--</text>
+                            </svg>
+                                <span class="analytics-gauge-label" id="txt-fsi-status">--</span>
+                            </div>
+                        </div>
+
+                        <div class="drift-row mt-sm" id="drift-row">
+                            <span class="text-sub">Drift — </span> T: <span id="drift-temp" class="drift-none">NONE</span> &nbsp; pH: <span id="drift-ph" class="drift-none">NONE</span> &nbsp; TDS: <span id="drift-tds" class="drift-none">NONE</span>
+                        </div>
+                    </div>
+
+                    <!-- SAFETY LOG -->
+                    <div class="card">
+                        <div class="flex" style="align-items:center; margin-bottom:12px">
+                            <span class="card-title" style="margin:0">Safety Log</span>
+                            <span class="log-count-badge hidden" id="log-count-badge">0</span>
+                        </div>
+                        <div class="log-scroll">
+                            <table class="safety-log-table" id="safety-log-table">
+                                <tbody id="safety-log-body">
+                                    <tr>
+                                        <td colspan="4" style="text-align:center;color:var(--text-dim);padding:16px 0;font-size:0.75rem">
+                                            Chưa có sự kiện
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /col-right -->
+
+            </div>
+            <!-- /dashboard-grid -->
+
+            <!-- ── CHART SECTION ───────────────────────────────────────── -->
+            <section class="chart-section">
+
+                <div class="chart-section-header">
+                    <h2 class="chart-section-title">📈 Lịch sử 12 giờ</h2>
+                    <div class="chart-header-right">
+                        <span class="chart-last-update" id="chart-last-update">--</span>
+                        <button class="btn btn-ghost btn-sm" onclick="exportChartCSV()">
+                            ⬇ Xuất CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chart-grid">
+
+                    <!-- Nhiệt độ -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <span class="chart-card-title temp">🌡 Nhiệt độ</span>
+                            <span class="chart-card-unit temp">°C</span>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="chart-temp"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- pH -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <span class="chart-card-title ph">⚗ Độ pH</span>
+                            <span class="chart-card-unit ph">pH</span>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="chart-ph"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- TDS -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <span class="chart-card-title tds">💎 TDS</span>
+                            <span class="chart-card-unit tds">ppm</span>
+                        </div>
+                        <div class="chart-canvas-wrap">
+                            <canvas id="chart-tds"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /chart-grid -->
+
+            </section>
+            <!-- /chart-section -->
+
+        </main>
+
+    </div>
+    <!-- /page-wrapper -->
+
+    <!-- Chart.js (phải load trước dashboard.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+</body>
+
+</html>
