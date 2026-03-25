@@ -165,6 +165,9 @@ function updateStatus(snap) {
 
     const banner = document.getElementById('banner-safe-mode');
     banner.classList.toggle('visible', !!d.safe_mode);
+
+    // Cập nhật safety log từ last_safety_event (string) trong status node
+    updateLastSafetyEvent(d.last_safety_event || 'NONE');
 }
 
 // ================================================================
@@ -279,6 +282,20 @@ function updateTelemetry(snap) {
         setStatusDot('dot-tds', d.tds_status);
         setSourceBadge('badge-tds-src', d.tds_source);
     }
+
+    // ── Shock banner ─────────────────────────────────────────────
+    // Hiện banner nếu có bất kỳ shock flag nào (không tính sensor bị hư)
+    var hasShockPh = !!d.shock_ph && !phBroken;
+    var hasShockTemp = !!d.shock_temp && !tempBroken;
+    if (hasShockPh || hasShockTemp) {
+        showShockBanner(
+            hasShockPh,
+            hasShockTemp,
+            hasShockPh ? d.ph : null,
+            hasShockTemp ? d.temperature : null,
+            d.timestamp || null // Unix seconds từ firmware
+        );
+    }
 }
 
 function setStatusDot(dotId, status) {
@@ -295,16 +312,171 @@ function setSourceBadge(badgeId, source) {
     const el = document.getElementById(badgeId);
     if (!el || !source) return;
     if (el.classList.contains('error-badge')) return; // đang hiện "HƯ"
+    if (el.classList.contains('shock-badge')) return; // đang hiện "SHOCK" — không override
     const isMeas = source === 'MEASURED';
     el.textContent = isMeas ? 'MEAS' : 'FB';
     el.className = 'source-badge ' + (isMeas ? 'measured' : 'fallback');
 }
 
+// Map sensorKey → { timer, lastSource } để restore badge sau shock
+var _shockBadgeTimers = {};
+
+/**
+ * Chiếm badge source (badge-temp-src / badge-ph-src) để hiện SHOCK.
+ * Sau 30s tự trả lại giá trị MEAS/FB trước đó.
+ * Gọi lại trước khi hết giờ sẽ reset timer.
+ */
+var SHOCK_CARD_BADGE_TTL_MS = 30000;
+
 function shockFlash(cardId) {
-    const card = document.getElementById(cardId);
-    if (!card) return;
-    card.classList.add('shock-flash');
-    setTimeout(function() { card.classList.remove('shock-flash'); }, 3000);
+    var sensorKey = cardId.replace('card-', ''); // 'card-temp' → 'temp', 'card-ph' → 'ph'
+    var badgeId = 'badge-' + sensorKey + '-src';
+
+    var card = document.getElementById(cardId);
+    var badge = document.getElementById(badgeId);
+    if (!card || !badge) return;
+
+    // Ghi nhớ giá trị badge hiện tại để restore sau
+    if (!_shockBadgeTimers[sensorKey]) {
+        _shockBadgeTimers[sensorKey] = {};
+    }
+    // Chỉ lưu lastSource nếu chưa trong trạng thái shock (tránh ghi đè bằng 'SHOCK')
+    if (!badge.classList.contains('shock-badge')) {
+        _shockBadgeTimers[sensorKey].lastText = badge.textContent;
+        _shockBadgeTimers[sensorKey].lastClass = badge.className;
+    }
+
+    // Highlight border card
+    card.classList.remove('shock-active-out');
+    card.classList.add('shock-active');
+
+    // Chiếm badge → hiện SHOCK
+    badge.textContent = '⚡ SHOCK';
+    badge.className = 'source-badge shock-badge';
+
+    // Reset timer nếu đang chạy
+    if (_shockBadgeTimers[sensorKey].timer) {
+        clearTimeout(_shockBadgeTimers[sensorKey].timer);
+    }
+
+    // Sau 30s: restore badge + trả border về bình thường
+    _shockBadgeTimers[sensorKey].timer = setTimeout(function() {
+        // Restore badge về MEAS/FB
+        var saved = _shockBadgeTimers[sensorKey];
+        if (badge && saved.lastText) {
+            badge.textContent = saved.lastText;
+            badge.className = saved.lastClass || 'source-badge measured';
+        }
+        // Trả border về bình thường
+        card.classList.remove('shock-active');
+        card.classList.add('shock-active-out');
+        setTimeout(function() { card.classList.remove('shock-active-out'); }, 1500);
+
+        delete _shockBadgeTimers[sensorKey];
+    }, SHOCK_CARD_BADGE_TTL_MS);
+}
+
+// ================================================================
+// SHOCK BANNER
+// Hiện khi phát hiện shock_ph / shock_temperature.
+// KHÔNG tự đóng — chỉ tắt khi người dùng bấm ✕.
+// Hiển thị thời gian xảy ra và đếm thời gian đã trôi qua.
+// ================================================================
+var _shockBannerReady = false;
+var _shockBannerTimeTs = null; // timestamp (ms) lúc shock xảy ra
+var _shockTimeInterval = null; // interval cập nhật chip thời gian
+
+function initShockBanner() {
+    if (_shockBannerReady) return;
+    var btn = document.getElementById('shock-banner-dismiss');
+    if (btn) {
+        btn.addEventListener('click', function() { hideShockBanner(); });
+    }
+    _shockBannerReady = true;
+}
+
+/**
+ * Hiện shock banner với nội dung phù hợp.
+ * Không tự đóng — người dùng phải bấm ✕.
+ * Nếu đã đang hiện mà shock mới đến → cập nhật nội dung + reset timer.
+ */
+function showShockBanner(shockPh, shockTemp, phVal, tempVal, tsSeconds) {
+    initShockBanner();
+    var banner = document.getElementById('banner-shock');
+    var titleEl = document.getElementById('shock-banner-title');
+    var detailEl = document.getElementById('shock-banner-detail');
+    if (!banner || !titleEl || !detailEl) return;
+
+    var both = shockPh && shockTemp;
+    var title, detail;
+
+    if (both) {
+        title = 'Shock pH & Nhiệt độ';
+        var parts = [];
+        if (phVal !== null) parts.push('pH ' + parseFloat(phVal).toFixed(2));
+        if (tempVal !== null) parts.push('T ' + parseFloat(tempVal).toFixed(1) + '°C');
+        detail = (parts.length ? parts.join(' · ') + ' — ' : '') + 'pH pump tạm dừng 1 chu kỳ';
+        banner.classList.add('critical');
+    } else if (shockPh) {
+        title = 'Shock pH';
+        detail = (phVal !== null ? 'pH ' + parseFloat(phVal).toFixed(2) + ' — ' : '') + 'pH pump tạm dừng 1 chu kỳ';
+        banner.classList.remove('critical');
+    } else if (shockTemp) {
+        title = 'Shock nhiệt độ';
+        detail = tempVal !== null ? 'T ' + parseFloat(tempVal).toFixed(1) + '°C' : '';
+        banner.classList.remove('critical');
+    } else {
+        return;
+    }
+
+    titleEl.textContent = title;
+    detailEl.textContent = detail;
+
+    // Lưu thời điểm shock từ timestamp firmware (chính xác hơn Date.now())
+    _shockBannerTimeTs = tsSeconds ? tsSeconds * 1000 : Date.now();
+    _startShockTimeClock();
+
+    // Hiện banner (force re-trigger animation nếu đã visible)
+    banner.classList.remove('visible');
+    void banner.offsetWidth;
+    banner.classList.add('visible');
+}
+
+/** Cập nhật chip thời gian mỗi giây */
+function _startShockTimeClock() {
+    if (_shockTimeInterval) clearInterval(_shockTimeInterval);
+    _updateShockTimeChip();
+    _shockTimeInterval = setInterval(_updateShockTimeChip, 1000);
+}
+
+function _updateShockTimeChip() {
+    var el = document.getElementById('shock-banner-time');
+    if (!el || !_shockBannerTimeTs) return;
+    var elapsed = Math.floor((Date.now() - _shockBannerTimeTs) / 1000);
+    var timeStr = toVnTime(_shockBannerTimeTs);
+    var ago;
+    if (elapsed < 60) {
+        ago = elapsed + ' giây trước';
+    } else if (elapsed < 3600) {
+        ago = Math.floor(elapsed / 60) + ' phút trước';
+    } else {
+        var h = Math.floor(elapsed / 3600);
+        var m = Math.floor((elapsed % 3600) / 60);
+        ago = h + ' giờ' + (m > 0 ? ' ' + m + ' phút' : '') + ' trước';
+    }
+    el.textContent = timeStr + ' · ' + ago;
+}
+
+function hideShockBanner() {
+    var banner = document.getElementById('banner-shock');
+    if (banner) banner.classList.remove('visible', 'critical');
+    if (_shockTimeInterval) {
+        clearInterval(_shockTimeInterval);
+        _shockTimeInterval = null;
+    }
+    _shockBannerTimeTs = null;
+    var el = document.getElementById('shock-banner-time');
+    if (el) el.textContent = '';
 }
 
 // ================================================================
@@ -519,29 +691,49 @@ function setDrift(elId, val) {
 }
 
 // ================================================================
-// SAFETY EVENTS
+// SAFETY EVENTS — đọc từ status.last_safety_event (string)
+// Firmware chỉ ghi 1 event gần nhất, không có list lịch sử.
+// Dashboard tự tích luỹ tối đa MAX_LOG_ENTRIES entries trong session.
 // ================================================================
 const CRITICAL_EVENTS = ['THERMAL_CUTOFF', 'EMERGENCY_COOL'];
-let logEntries = [];
+const MAX_LOG_ENTRIES = 10;
+var _logEntries = []; // tích luỹ trong session
+var _lastEventStr = null; // event string đã xử lý lần trước
 
-function updateSafetyEvents(snap) {
-    if (!snap.exists()) return;
-    const raw = snap.val();
-    const entries = Object.values(raw)
-        .filter(function(e) { return e && e.event; })
-        .sort(function(a, b) { return (b.timestamp || 0) - (a.timestamp || 0); })
-        .slice(0, 10);
+/**
+ * Gọi từ updateStatus() mỗi khi status thay đổi.
+ * @param {string} eventStr  — ví dụ "THERMAL_CUTOFF", "NONE", "SHOCK_GUARD"
+ */
+function updateLastSafetyEvent(eventStr) {
+    // Bỏ qua nếu không có event hoặc giống lần trước
+    if (!eventStr || eventStr === 'NONE') {
+        renderSafetyLog();
+        return;
+    }
+    if (eventStr === _lastEventStr) return;
+    _lastEventStr = eventStr;
 
-    logEntries = entries;
+    // Thêm entry mới vào đầu danh sách, giữ tối đa MAX_LOG_ENTRIES
+    _logEntries.unshift({
+        event: eventStr,
+        receivedAt: Date.now(), // timestamp phía client (ms)
+    });
+    if (_logEntries.length > MAX_LOG_ENTRIES) {
+        _logEntries = _logEntries.slice(0, MAX_LOG_ENTRIES);
+    }
+
     renderSafetyLog();
+    updateLogCountBadge();
+}
 
-    const today = new Date(Date.now() + VN_OFFSET).toDateString();
-    var todayCount = entries.filter(function(e) {
-        var d = new Date((e.timestamp || 0) * 1000 + VN_OFFSET);
-        return d.toDateString() === today;
+function updateLogCountBadge() {
+    // Đếm entries nhận được hôm nay
+    const todayStr = new Date(Date.now() + VN_OFFSET).toDateString();
+    var todayCount = _logEntries.filter(function(e) {
+        return new Date(e.receivedAt + VN_OFFSET).toDateString() === todayStr;
     }).length;
-
     const badge = document.getElementById('log-count-badge');
+    if (!badge) return;
     if (todayCount > 0) {
         badge.textContent = todayCount;
         badge.classList.remove('hidden');
@@ -553,20 +745,32 @@ function updateSafetyEvents(snap) {
 function renderSafetyLog() {
     const tbody = document.getElementById('safety-log-body');
     if (!tbody) return;
-    if (logEntries.length === 0) {
+    if (_logEntries.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-dim);padding:16px 0;font-size:0.75rem">Chưa có sự kiện</td></tr>';
         return;
     }
-    tbody.innerHTML = logEntries.map(function(e) {
+    tbody.innerHTML = _logEntries.map(function(e) {
         const isCrit = CRITICAL_EVENTS.includes(e.event);
+        const isShock = e.event === 'SHOCK_GUARD';
         const dotCls = isCrit ? 'critical' : 'warn';
-        const tsStr = e.timestamp ? toVnTime(e.timestamp * 1000) : '--:--';
-        const valStr = e.value !== undefined ? parseFloat(e.value).toFixed(1) : '';
-        return '<tr>' +
+        const tsStr = toVnTime(e.receivedAt);
+        const rowClass = isShock ? ' class="log-row-shock"' : '';
+
+        // Cột 4: shock → chip, critical → label đỏ, còn lại trống
+        var valCell;
+        if (isShock) {
+            valCell = '<td class="event-val"><span class="log-shock-chip fallback">pH pump dừng</span></td>';
+        } else if (isCrit) {
+            valCell = '<td class="event-val" style="color:var(--accent-err);font-size:0.68rem;font-weight:600">CRITICAL</td>';
+        } else {
+            valCell = '<td class="event-val"></td>';
+        }
+
+        return '<tr' + rowClass + '>' +
             '<td><span class="log-dot ' + dotCls + '"></span></td>' +
             '<td>' + tsStr + '</td>' +
             '<td class="event-name">' + fmtEventName(e.event) + '</td>' +
-            '<td class="event-val">' + valStr + '</td>' +
+            valCell +
             '</tr>';
     }).join('');
 }
@@ -705,6 +909,7 @@ function injectSensorBrokenStyles() {
     listenRef('water_change', updateWaterChange);
     listenRef('settings/water_schedule', updateWaterSchedule);
     listenRef('analytics', updateAnalytics);
+    // safety events đọc từ status.last_safety_event — xử lý trong updateStatus()
 
     // Firmware staleness watcher
     startStalenessWatcher();

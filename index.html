@@ -55,9 +55,21 @@
             ⚡ Mất kết nối Firebase — đang thử lại...
         </div>
 
-        <!-- Firmware stale banner -->
-        <div class="offline-banner" id="banner-stale" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.3);color:var(--accent-warn)">
-            ⏱ Firmware không phản hồi — không nhận được dữ liệu trong 30 giây
+        <!-- Firmware stale banner (độc lập, không bị shock đè) -->
+        <div class="stale-banner" id="banner-stale">
+            <span class="stale-banner-icon">⏱</span>
+            <span class="stale-banner-text">Firmware không phản hồi — không nhận được dữ liệu trong 30 giây</span>
+        </div>
+
+        <!-- Shock warning banner (ẩn mặc định, chỉ tắt khi người dùng bấm ✕) -->
+        <div class="shock-banner" id="banner-shock">
+            <span class="shock-banner-icon">⚡</span>
+            <div class="shock-banner-body">
+                <span class="shock-banner-title" id="shock-banner-title">Shock cảm biến phát hiện</span>
+                <span class="shock-banner-detail" id="shock-banner-detail"></span>
+            </div>
+            <span class="shock-banner-time" id="shock-banner-time"></span>
+            <button class="shock-banner-dismiss" id="shock-banner-dismiss" aria-label="Đóng cảnh báo">✕</button>
         </div>
 
         <!-- ── MAIN ─────────────────────────────────────────────────── -->
