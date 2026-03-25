@@ -3,7 +3,7 @@
 // Admin config: pipeline + safety thresholds
 // ================================================================
 
-import { listenRef, updateRef, onConnectionChange, requireAuth, doLogout } from './firebase-init.js';
+import { listenRef, updateRef, onConnectionChange, requireAuth, doLogout } from '../firebase-init.js';
 
 // ================================================================
 // DEFAULTS
@@ -437,13 +437,6 @@ function checkSafetyAlerts() {
     } else {
         var _aa2 = document.getElementById('inp-ac-ema-alpha');
         if (_aa2) _aa2.classList.remove('field-danger');
-    }
-    if (!isNaN(alpha) && (alpha <= 0 || alpha > 1)) {
-        alerts.push('⚠ EMA Alpha phải trong khoảng (0, 1]');
-        document.getElementById('inp-ema-alpha').classList.add('field-danger');
-    } else {
-        var _ea = document.getElementById('inp-ema-alpha');
-        if (_ea) _ea.classList.remove('field-danger');
     }
 
     // SAFE_RANGES checks
