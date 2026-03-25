@@ -9,41 +9,42 @@
 
 :root {
     /* Backgrounds */
-    --bg-page:      #f0f4f8;
-    --bg-card:      #ffffff;
-    --bg-card2:     #f7f9fc;
-
+    --bg-page: #f0f4f8;
+    --bg-card: #ffffff;
+    --bg-card2: #f7f9fc;
     /* Borders */
-    --border:       rgba(0, 0, 0, 0.09);
+    --border: rgba(0, 0, 0, 0.09);
     --border-light: rgba(0, 0, 0, 0.06);
-
     /* Text */
-    --text-main:    #0f172a;
-    --text-sub:     #475569;
-    --text-dim:     #94a3b8;
-
+    --text-main: #0f172a;
+    --text-sub: #475569;
+    --text-dim: #94a3b8;
     /* Accents — giữ màu gốc, chỉ tăng độ bão hòa nhẹ để nổi trên nền trắng */
-    --accent-temp:     #d97706;
-    --accent-ph:       #0d9488;
-    --accent-tds:      #7c3aed;
-    --accent-ok:       #16a34a;
-    --accent-warn:     #d97706;
-    --accent-err:      #dc2626;
+    --accent-temp: #d97706;
+    --accent-ph: #0d9488;
+    --accent-tds: #7c3aed;
+    --accent-ok: #16a34a;
+    --accent-warn: #d97706;
+    --accent-err: #dc2626;
     --accent-pipeline: #2563eb;
-    --accent-safety:   #dc2626;
+    --accent-safety: #dc2626;
 }
 
+
 /* Body / page background */
+
 body {
     background: var(--bg-page) !important;
     color: var(--text-main) !important;
 }
 
+
 /* ── Header ───────────────────────────────────────────────────── */
+
 .app-header {
     background: #ffffff !important;
     border-bottom: 1px solid var(--border) !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 .header-brand,
@@ -58,11 +59,13 @@ body {
     border-bottom-color: var(--accent-pipeline) !important;
 }
 
+
 /* ── Cards ────────────────────────────────────────────────────── */
+
 .card {
     background: #ffffff !important;
     border: 1px solid var(--border) !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05) !important;
 }
 
 .card-title,
@@ -71,36 +74,42 @@ body {
     color: var(--text-main) !important;
 }
 
+
 /* ── Gauge SVG text ───────────────────────────────────────────── */
+
 .gauge-value,
 .gauge-unit {
     fill: var(--text-main) !important;
 }
 
 .gauge-track {
-    stroke: rgba(0,0,0,0.07) !important;
+    stroke: rgba(0, 0, 0, 0.07) !important;
 }
 
 .gauge-range span {
     color: var(--text-dim) !important;
 }
 
+
 /* ── Form inputs ──────────────────────────────────────────────── */
+
 .form-input,
 .form-select,
 .form-textarea {
     background: #f8fafc !important;
-    border: 1px solid rgba(0,0,0,0.12) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
     color: var(--text-main) !important;
 }
 
 .form-input:focus,
 .form-select:focus {
     border-color: var(--accent-pipeline) !important;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
 }
 
+
 /* ── Buttons ──────────────────────────────────────────────────── */
+
 .btn-primary {
     background: var(--accent-pipeline) !important;
     color: #fff !important;
@@ -109,7 +118,7 @@ body {
 .btn-secondary,
 .btn-outline {
     background: #fff !important;
-    border-color: rgba(0,0,0,0.15) !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
     color: var(--text-main) !important;
 }
 
@@ -118,7 +127,9 @@ body {
     color: #fff !important;
 }
 
+
 /* ── Relay items ──────────────────────────────────────────────── */
+
 .relay-item {
     background: #f8fafc !important;
     border: 1px solid var(--border) !important;
@@ -129,13 +140,15 @@ body {
 }
 
 .relay-item.on {
-    background: rgba(37,99,235,0.06) !important;
-    border-color: rgba(37,99,235,0.2) !important;
+    background: rgba(37, 99, 235, 0.06) !important;
+    border-color: rgba(37, 99, 235, 0.2) !important;
 }
 
+
 /* ── Toggle ───────────────────────────────────────────────────── */
+
 .toggle-track {
-    background: rgba(0,0,0,0.12) !important;
+    background: rgba(0, 0, 0, 0.12) !important;
 }
 
 .toggle.on .toggle-track {
@@ -144,36 +157,42 @@ body {
 
 .toggle-thumb {
     background: #fff !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
+
 /* ── Banners ──────────────────────────────────────────────────── */
+
 .offline-banner {
-    background: rgba(220,38,38,0.06) !important;
-    border-color: rgba(220,38,38,0.2) !important;
+    background: rgba(220, 38, 38, 0.06) !important;
+    border-color: rgba(220, 38, 38, 0.2) !important;
     color: var(--accent-err) !important;
 }
 
 .safe-mode-banner {
-    background: rgba(217,119,6,0.06) !important;
-    border-color: rgba(217,119,6,0.25) !important;
+    background: rgba(217, 119, 6, 0.06) !important;
+    border-color: rgba(217, 119, 6, 0.25) !important;
     color: var(--accent-warn) !important;
 }
 
+
 /* ── Source badges ────────────────────────────────────────────── */
+
 .source-badge.measured {
-    background: rgba(22,163,74,0.10) !important;
+    background: rgba(22, 163, 74, 0.10) !important;
     color: var(--accent-ok) !important;
-    border: 1px solid rgba(22,163,74,0.25) !important;
+    border: 1px solid rgba(22, 163, 74, 0.25) !important;
 }
 
 .source-badge.fallback {
-    background: rgba(217,119,6,0.10) !important;
+    background: rgba(217, 119, 6, 0.10) !important;
     color: var(--accent-warn) !important;
-    border: 1px solid rgba(217,119,6,0.25) !important;
+    border: 1px solid rgba(217, 119, 6, 0.25) !important;
 }
 
+
 /* ── Analytics / WSI / FSI gauges ────────────────────────────── */
+
 .analytics-section,
 .wsi-card,
 .fsi-card {
@@ -181,7 +200,9 @@ body {
     border-color: var(--border) !important;
 }
 
+
 /* ── Safety log table ─────────────────────────────────────────── */
+
 .safety-log-table th {
     color: var(--text-dim) !important;
     border-bottom-color: var(--border) !important;
@@ -196,19 +217,23 @@ body {
     color: var(--text-main) !important;
 }
 
+
 /* ── Toast notifications ──────────────────────────────────────── */
+
 .toast {
     background: #fff !important;
     border: 1px solid var(--border) !important;
     color: var(--text-main) !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.10) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.10) !important;
 }
 
+
 /* ── Chart cards ──────────────────────────────────────────────── */
+
 .chart-card {
     background: #ffffff !important;
     border-color: var(--border) !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05) !important;
 }
 
 .chart-section-header {
@@ -224,21 +249,21 @@ body {
 }
 
 .chart-card-unit.temp {
-    background: rgba(217,119,6,0.10) !important;
+    background: rgba(217, 119, 6, 0.10) !important;
     color: var(--accent-temp) !important;
-    border-color: rgba(217,119,6,0.22) !important;
+    border-color: rgba(217, 119, 6, 0.22) !important;
 }
 
 .chart-card-unit.ph {
-    background: rgba(13,148,136,0.10) !important;
+    background: rgba(13, 148, 136, 0.10) !important;
     color: var(--accent-ph) !important;
-    border-color: rgba(13,148,136,0.22) !important;
+    border-color: rgba(13, 148, 136, 0.22) !important;
 }
 
 .chart-card-unit.tds {
-    background: rgba(124,58,237,0.10) !important;
+    background: rgba(124, 58, 237, 0.10) !important;
     color: var(--accent-tds) !important;
-    border-color: rgba(124,58,237,0.22) !important;
+    border-color: rgba(124, 58, 237, 0.22) !important;
 }
 
 .chart-card.loading .chart-canvas-wrap::after,
@@ -247,24 +272,52 @@ body {
     color: var(--text-dim) !important;
 }
 
+
 /* ── Water change section ─────────────────────────────────────── */
+
 .wc-progress-track {
-    background: rgba(0,0,0,0.08) !important;
+    background: rgba(0, 0, 0, 0.08) !important;
 }
 
 .wc-progress-fill {
     background: var(--accent-pipeline) !important;
 }
 
-.wc-state-badge.idle     { background: rgba(0,0,0,0.06) !important; color: var(--text-dim) !important; }
-.wc-state-badge.pumping-out { background: rgba(220,38,38,0.08) !important; color: var(--accent-err) !important; }
-.wc-state-badge.pumping-in  { background: rgba(37,99,235,0.08) !important; color: var(--accent-pipeline) !important; }
+.wc-state-badge.idle {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: var(--text-dim) !important;
+}
+
+.wc-state-badge.pumping-out {
+    background: rgba(220, 38, 38, 0.08) !important;
+    color: var(--accent-err) !important;
+}
+
+.wc-state-badge.pumping-in {
+    background: rgba(37, 99, 235, 0.08) !important;
+    color: var(--accent-pipeline) !important;
+}
+
 
 /* ── Scrollbar (light) ────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #f0f4f8; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f4f8;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
 
 
 /* ================================================================
@@ -334,13 +387,23 @@ body {
 }
 
 @keyframes pulse-warn {
-    0%, 100% { box-shadow: 0 0 0 0   rgba(217, 119, 6, 0.0); }
-    50%       { box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.22); }
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.0);
+    }
+    50% {
+        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.22);
+    }
 }
 
 @keyframes pulse-danger {
-    0%, 100% { box-shadow: 0 0 0 0   rgba(220, 38, 38, 0.0); }
-    50%       { box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.22); }
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.0);
+    }
+    50% {
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.22);
+    }
 }
 
 
@@ -430,34 +493,42 @@ body {
 }
 
 .chart-card {
-    background:    var(--bg-card);
-    border:        1px solid var(--border);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: var(--radius-card);
-    padding:       16px 16px 12px;
+    padding: 16px 16px 12px;
 }
 
 .chart-card-header {
-    display:         flex;
-    align-items:     center;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-    margin-bottom:   10px;
+    margin-bottom: 10px;
 }
 
 .chart-card-title {
-    font-size:   0.78rem;
+    font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.03em;
     text-transform: uppercase;
 }
 
-.chart-card-title.temp { color: var(--accent-temp); }
-.chart-card-title.ph   { color: var(--accent-ph);   }
-.chart-card-title.tds  { color: var(--accent-tds);  }
+.chart-card-title.temp {
+    color: var(--accent-temp);
+}
+
+.chart-card-title.ph {
+    color: var(--accent-ph);
+}
+
+.chart-card-title.tds {
+    color: var(--accent-tds);
+}
 
 .chart-card-unit {
-    font-size:   0.68rem;
+    font-size: 0.68rem;
     font-family: 'IBM Plex Mono', monospace;
-    padding:     2px 7px;
+    padding: 2px 7px;
     border-radius: var(--radius-xs);
     font-weight: 600;
 }
@@ -469,34 +540,42 @@ body {
 
 .chart-canvas-wrap canvas {
     display: block;
-    width:  100% !important;
+    width: 100% !important;
     height: 100% !important;
 }
 
 .chart-card.loading .chart-canvas-wrap::after,
 .chart-card.no-data .chart-canvas-wrap::after {
-    content:      attr(data-msg);
-    position:     absolute;
-    inset:        0;
-    display:      flex;
-    align-items:  center;
+    content: attr(data-msg);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    font-size:    0.75rem;
-    color:        var(--text-dim);
-    background:   var(--bg-card);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    background: var(--bg-card);
 }
 
+
 /* ── Logout button in header ──────────────────────────────────── */
+
 #btn-logout {
     background: none;
     border: 1px solid var(--border);
     border-radius: 6px;
-    color: var(--text-sub);
+    color: var(--accent-err);
     font-size: 0.78rem;
-    padding: 3px 10px;
+    padding: 5px 10px;
     cursor: pointer;
     margin-left: 4px;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    line-height: 1;
+    white-space: nowrap;
+    font-family: inherit;
 }
 
 #btn-logout:hover {

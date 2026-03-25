@@ -241,12 +241,28 @@
                 <span class="status-dot offline" id="dot-online"></span>
                 <span id="txt-online">Offline</span>
             </div>
+
+            <!-- Nav desktop -->
             <nav class="header-nav">
                 <a href="index.html">Dashboard</a>
                 <a href="user-settings.html">Settings</a>
                 <a href="admin.html" class="active">Admin</a>
                 <button id="btn-logout" onclick="import('./firebase-init.js').then(m => m.doLogout())">Đăng xuất</button>
             </nav>
+
+            <!-- Nav mobile: hamburger -->
+            <div class="mobile-menu" id="mobile-menu">
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="mobile-dropdown" id="mobile-dropdown">
+                    <a href="index.html">📊 Dashboard</a>
+                    <a href="user-settings.html">⚙️ Settings</a>
+                    <a href="admin.html" class="active">🔧 Admin</a>
+                    <div class="mobile-dropdown-divider"></div>
+                    <button onclick="import('./firebase-init.js').then(m => m.doLogout())">🚪 Đăng xuất</button>
+                </div>
+            </div>
         </header>
 
         <!-- Offline banner -->
@@ -618,6 +634,27 @@
     <!-- /page-wrapper -->
 
     <script type="module" src="js/admin.js"></script>
+    <script>
+        (function() {
+            var btn = document.getElementById('hamburger-btn');
+            var dropdown = document.getElementById('mobile-dropdown');
+            if (!btn || !dropdown) return;
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var open = dropdown.classList.toggle('open');
+                btn.setAttribute('aria-expanded', String(open));
+                btn.classList.toggle('active', open);
+            });
+            document.addEventListener('click', function() {
+                dropdown.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.classList.remove('active');
+            });
+            dropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        })();
+    </script>
 </body>
 
 </html>
