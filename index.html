@@ -28,7 +28,7 @@
                 <a href="index.html" class="active">Dashboard</a>
                 <a href="user-settings.html">Settings</a>
                 <a href="admin.html">Admin</a>
-                <button id="btn-logout" onclick="import('./firebase-init.js').then(m => m.doLogout())">Đăng xuất</button>
+                <button id="btn-logout" onclick="import('./js/firebase-init.js').then(m => m.doLogout())">Đăng xuất</button>
             </nav>
 
             <!-- Nav mobile: hamburger -->
@@ -41,7 +41,7 @@
                     <a href="user-settings.html">⚙️ Settings</a>
                     <a href="admin.html">🔧 Admin</a>
                     <div class="mobile-dropdown-divider"></div>
-                    <button onclick="import('./firebase-init.js').then(m => m.doLogout())">🚪 Đăng xuất</button>
+                    <button onclick="import('./js/firebase-init.js').then(m => m.doLogout())">🚪 Đăng xuất</button>
                 </div>
             </div>
         </header>
